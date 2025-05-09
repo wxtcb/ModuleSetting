@@ -9,10 +9,7 @@ class Libur extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \Modules\Setting\Database\factories\LiburFactory::new();
-    }
+    protected $table = 'harilibur';
+    protected $primaryKey = 'id';
+    protected $fillable = ['tanggal', 'keterangan'];
 }

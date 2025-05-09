@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('setting')->group(function() {
     Route::prefix('libur')->group(function() {
-        Route::get('/', 'LiburController@index'); 
+        Route::get('/', 'LiburController@index')->name('libur.index');
+        Route::post('/store', 'LiburController@store')->name('libur.store');
     });
 
     Route::prefix('jam')->group(function() {

@@ -5,6 +5,7 @@ namespace Modules\Setting\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Setting\Entities\Libur;
 
 class LiburController extends Controller
 {
@@ -12,9 +13,21 @@ class LiburController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('setting::libur.index');
+        $year = $request->input('year', now()->year);
+    
+        $hariLibur = Libur::whereYear('tanggal', $year)
+            ->orderBy('tanggal', 'desc')
+            ->get();
+    
+        // Ambil semua tahun yang ada di tabel libur
+        $tahunTersedia = Libur::selectRaw('YEAR(tanggal) as tahun')
+            ->distinct()
+            ->orderByDesc('tahun')
+            ->pluck('tahun');
+    
+        return view('setting::libur.index', compact('hariLibur', 'tahunTersedia', 'year'));
     }
 
     /**
@@ -33,7 +46,17 @@ class LiburController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'tanggal' => 'required|date|unique:harilibur,tanggal',
+            'keterangan' => 'required|string|max:255',
+        ]);
+
+        Libur::create([
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->back()->with('success', 'Hari libur berhasil ditambahkan.');
     }
 
     /**
