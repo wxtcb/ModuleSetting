@@ -9,10 +9,7 @@ class Jam extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \Modules\Setting\Database\factories\JamFactory::new();
-    }
+    protected $table = 'jamkerja';
+    protected $primaryKey = 'id';
+    protected $fillable = ['nama', 'jenis', 'jam_masuk', 'jam_pulang', 'jam_kerja'];
 }

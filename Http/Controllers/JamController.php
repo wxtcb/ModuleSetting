@@ -5,6 +5,7 @@ namespace Modules\Setting\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Setting\Entities\Jam;
 
 class JamController extends Controller
 {
@@ -14,7 +15,8 @@ class JamController extends Controller
      */
     public function index()
     {
-        return view('setting::jam.index');
+        $jamKerjas = Jam::all();
+        return view('setting::jam.index', compact('jamKerjas'));
     }
 
     /**
@@ -33,7 +35,34 @@ class JamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'jenis' => 'required|in:pegawai,dosen',
+            'jam_masuk' => 'nullable|required_if:jenis,pegawai|date_format:H:i',
+            'jam_pulang' => 'nullable|required_if:jenis,pegawai|date_format:H:i',
+            'jam_kerja' => 'nullable|required_if:jenis,dosen|string'
+        ]);
+
+        $jamKerja = new Jam();
+        $jamKerja->nama = $request->nama;
+        $jamKerja->jenis = $request->jenis;
+        $jamKerja->jam_masuk = $request->jam_masuk;
+        $jamKerja->jam_pulang = $request->jam_pulang;
+
+        if ($request->jenis === 'pegawai') {
+            $start = strtotime($request->jam_masuk);
+            $end = strtotime($request->jam_pulang);
+            $diff = $end - $start;
+            $jam = floor($diff / 3600);
+            $menit = floor(($diff % 3600) / 60);
+            $jamKerja->jam_kerja = "$jam jam $menit menit";
+        } else {
+            $jamKerja->jam_kerja = $request->jam_kerja;
+        }
+
+        $jamKerja->save();
+
+        return redirect()->back()->with('success', 'Jam kerja berhasil disimpan.');
     }
 
     /**

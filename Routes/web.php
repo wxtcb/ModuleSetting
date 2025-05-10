@@ -20,6 +20,7 @@ Route::prefix('setting')->group(function() {
     });
 
     Route::prefix('jam')->group(function() {
-        Route::get('/', 'JamController@index'); 
+        Route::get('/', 'JamController@index')->name('jam.index'); 
+        Route::post('/store', 'JamController@store')->name('jam.store'); 
     });
 });
