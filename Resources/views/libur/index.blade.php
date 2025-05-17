@@ -34,24 +34,28 @@
                             @csrf
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalTambahLiburLabel">Tambah Hari Libur</h5>
+                                    <h5 class="modal-title">Tambah Hari Libur</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="tanggal" class="form-label">Tanggal</label>
-                                        <input type="date" name="tanggal" class="form-control" required>
+                                    <div id="libur-wrapper">
+                                        <div class="libur-item mb-3 border p-2 rounded">
+                                            <label>Tanggal</label>
+                                            <input type="date" name="tanggal[]" class="form-control mb-2" required>
+                                            <label>Keterangan</label>
+                                            <input type="text" name="keterangan[]" class="form-control" placeholder="Contoh: Hari Raya" required>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="keterangan" class="form-label">Keterangan</label>
-                                        <input type="text" name="keterangan" class="form-control" placeholder="Contoh: Hari Raya" required>
-                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="btnTambahForm">
+                                        + Tambah Form Hari Libur
+                                    </button>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Simpan</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                 </div>
                             </div>
                         </form>
@@ -89,3 +93,44 @@
     </div>
 </div>
 @stop
+
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnTambah = document.getElementById('btnTambahForm');
+        const wrapper = document.getElementById('libur-wrapper');
+
+        btnTambah.addEventListener('click', function () {
+            // Ambil form terakhir (jika ada)
+            const lastItem = wrapper.querySelector('.libur-item:last-child');
+            let lastTanggal = '';
+            let lastKeterangan = '';
+
+            if (lastItem) {
+                lastTanggal = lastItem.querySelector('input[name="tanggal[]"]').value;
+                lastKeterangan = lastItem.querySelector('input[name="keterangan[]"]').value;
+            }
+
+            // Buat form baru dengan nilai dari form terakhir
+            const item = document.createElement('div');
+            item.classList.add('libur-item', 'mb-3', 'border', 'p-2', 'rounded');
+            item.innerHTML = `
+                <label>Tanggal</label>
+                <input type="date" name="tanggal[]" class="form-control mb-2" value="${lastTanggal}" required>
+                <label>Keterangan</label>
+                <input type="text" name="keterangan[]" class="form-control" value="${lastKeterangan}" placeholder="Contoh: Hari Nasional" required>
+                <button type="button" class="btn btn-sm btn-danger mt-2 btn-hapus-form">Hapus</button>
+            `;
+            wrapper.appendChild(item);
+        });
+
+        // Hapus form dinamis
+        wrapper.addEventListener('click', function (e) {
+            if (e.target.classList.contains('btn-hapus-form')) {
+                e.target.closest('.libur-item').remove();
+            }
+        });
+    });
+</script>
+@endpush
+
