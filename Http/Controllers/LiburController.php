@@ -47,14 +47,25 @@ class LiburController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tanggal' => 'required|date|unique:harilibur,tanggal',
-            'keterangan' => 'required|string|max:255',
+            'tanggal.*' => 'required|date|distinct',
+            'keterangan.*' => 'required|string|max:255',
         ]);
 
-        Libur::create([
-            'tanggal' => $request->tanggal,
-            'keterangan' => $request->keterangan,
-        ]);
+        $tanggal = $request->input('tanggal');
+        $keterangan = $request->input('keterangan');
+
+        $data = [];
+        foreach ($tanggal as $index => $tgl) {
+            // Skip jika tanggal sudah ada di database
+            if (Libur::whereDate('tanggal', $tgl)->exists()) continue;
+
+            $data[] = [
+                'tanggal' => $tgl,
+                'keterangan' => $keterangan[$index],
+            ];
+        }
+
+        Libur::insert($data);
 
         return redirect()->back()->with('success', 'Hari libur berhasil ditambahkan.');
     }
