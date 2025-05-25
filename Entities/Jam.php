@@ -11,5 +11,5 @@ class Jam extends Model
 
     protected $table = 'jamkerja';
     protected $primaryKey = 'id';
-    protected $fillable = ['nama', 'jenis', 'jam_masuk', 'jam_pulang', 'jam_kerja'];
+    protected $fillable = ['nama', 'tanggal_mulai', 'tanggal_selesai', 'jenis', 'jam_masuk', 'jam_pulang', 'jam_kerja'];
 }
