@@ -50,6 +50,14 @@
                                             <option value="dosen">Dosen</option>
                                         </select>
                                     </div>
+                                    <div class="mb-3">
+                                        <label>Tanggal Mulai</label>
+                                        <input type="date" name="tanggal_mulai" class="form-control">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Tanggal Selesai</label>
+                                        <input type="date" name="tanggal_selesai" class="form-control">
+                                    </div>
                                     <div class="mb-3 pegawai-only" style="display: none;">
                                         <label>Jam Masuk</label>
                                         <input type="time" name="jam_masuk" class="form-control">
@@ -60,7 +68,7 @@
                                     </div>
                                     <div class="mb-3 dosen-only" style="display: none;">
                                         <label>Jam Kerja</label>
-                                        <input type="text" name="jam_kerja" class="form-control">
+                                        <input type="text" name="jam_kerja" placeholder="Contoh: 3 jam 0 menit" class="form-control">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -75,6 +83,8 @@
                     <thead>
                         <tr>
                             <th>Nama Jam Kerja</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Selesai</th>
                             <th>Jenis Karyawan</th>
                             <th>Jam Masuk</th>
                             <th>Jam Pulang</th>
@@ -85,6 +95,8 @@
                         @forelse ($jamKerjas as $item)
                         <tr>
                             <td>{{ $item->nama }}</td>
+                            <td>{{ $item->tanggal_mulai }}</td>
+                            <td>{{ $item->tanggal_selesai }}</td>
                             <td>{{ ucfirst($item->jenis) }}</td>
                             <td>{{ $item->jam_masuk ?? '-' }}</td>
                             <td>{{ $item->jam_pulang ?? '-' }}</td>
@@ -92,7 +104,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">Belum ada data jam kerja.</td>
+                            <td colspan="7" class="text-center">Belum ada data jam kerja.</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -37,6 +37,8 @@ class JamController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
+            'tanggal_mulai' => 'required',
+            'tanggal_selesai' => 'required',
             'jenis' => 'required|in:pegawai,dosen',
             'jam_masuk' => 'nullable|required_if:jenis,pegawai|date_format:H:i',
             'jam_pulang' => 'nullable|required_if:jenis,pegawai|date_format:H:i',
@@ -45,6 +47,8 @@ class JamController extends Controller
 
         $jamKerja = new Jam();
         $jamKerja->nama = $request->nama;
+        $jamKerja->tanggal_mulai = $request->tanggal_mulai;
+        $jamKerja->tanggal_selesai = $request->tanggal_selesai;
         $jamKerja->jenis = $request->jenis;
         $jamKerja->jam_masuk = $request->jam_masuk;
         $jamKerja->jam_pulang = $request->jam_pulang;
